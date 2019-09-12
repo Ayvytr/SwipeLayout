@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SwipeLayout">
+        <attr name="swipeEnabled" format="boolean" />
+        <attr name="swipeLeftEnabled" format="boolean" />
+        <attr name="swipeRightEnabled" format="boolean" />
+
+    </declare-styleable>
+
+    <declare-styleable name="SwipeLayout_Layout">
+        <attr name="layout_gravity" format="enum">
+            <enum name="center" value="0" />
+            <enum name="left" value="-1" />
+            <enum name="right" value="1" />
+        </attr>
+
+        <attr name="layout_autoOpenDistance" format="dimension">
+            <enum name="no" value="-1" />
+        </attr>
+    </declare-styleable>
+</resources>

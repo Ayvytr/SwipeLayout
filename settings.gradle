@@ -1,0 +1,2 @@
+include ':app-androidx', ':swipe-layout-androidx', ':swipe-layout'
+rootProject.name='SwipeLayout'
