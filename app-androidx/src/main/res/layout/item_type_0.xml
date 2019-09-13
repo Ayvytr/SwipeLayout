@@ -3,42 +3,42 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_vertical"
+    android:layout_height="@dimen/_50dp"
     android:orientation="vertical">
 
     <com.ayvytr.swipelayout.SwipeLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        app:clickAutoClose="false"
-        android:layout_height="wrap_content"
-        android:background="@color/light_gray">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/pink"
+            android:background="@color/center_bg"
             android:gravity="center"
-            android:text="TextView" />
+            android:text="左侧侧滑：完成"
+            android:textColor="@color/center_text" />
 
         <TextView
             android:id="@+id/tv_left"
             android:layout_width="@dimen/_100dp"
-            android:layout_height="@dimen/_50dp"
+            android:layout_height="match_parent"
+            android:background="@color/left_bg"
             android:gravity="center"
-            android:text="左侧侧滑"
-            app:layout_autoOpenDistance="@dimen/_50dp"
+            android:textColor="@color/left_text"
+            app:layout_autoOpenDistance="@dimen/_30dp"
             app:layout_gravity="left" />
 
         <TextView
             android:id="@+id/tv_right"
             android:layout_width="@dimen/_200dp"
-            android:layout_height="@dimen/_50dp"
-            android:background="@color/aero"
+            android:layout_height="match_parent"
+            android:background="@color/right_bg"
             android:gravity="center"
-            android:text="右侧侧滑"
-            app:layout_autoOpenDistance="@dimen/_100dp"
+            android:text="右侧侧滑：删除"
+            android:textColor="@color/right_text"
+            app:layout_autoOpenDistance="@dimen/_50dp"
             app:layout_gravity="right" />
     </com.ayvytr.swipelayout.SwipeLayout>
 </LinearLayout>

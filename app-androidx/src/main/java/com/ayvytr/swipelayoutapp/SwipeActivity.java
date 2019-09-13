@@ -24,17 +24,35 @@ public class SwipeActivity extends AppCompatActivity {
     private void initView() {
         tv = findViewById(R.id.tv);
         swipeLayout = findViewById(R.id.swipe_layout);
-        swipeLayout.setOnStateChangedListener(new SwipeLayout.OnStateChangedListener() {
-            @Override
-            public void onChanged(boolean isOpen, SwipeLayout swipeLayout) {
-                Toast.makeText(SwipeActivity.this, isOpen + "", Toast.LENGTH_SHORT).show();
-            }
-        });
-        tv.setOnClickListener(new View.OnClickListener() {
+//        swipeLayout.setOnStateChangedListener(new SwipeLayout.OnStateChangedListener() {
+//            @Override
+//            public void onChanged(boolean isOpen, SwipeLayout swipeLayout) {
+//                Toast.makeText(SwipeActivity.this, isOpen ? "打开了" : "关闭了", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+        swipeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SwipeActivity.this, swipeLayout.isOpen() + "", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SwipeActivity.this, "SwipeLayout点击了", Toast.LENGTH_SHORT).show();
             }
         });
+        findViewById(R.id.tv_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(SwipeActivity.this, "左侧侧滑", Toast.LENGTH_SHORT).show();
+            }
+        });
+        findViewById(R.id.tv_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(SwipeActivity.this, "右侧侧滑", Toast.LENGTH_SHORT).show();
+            }
+        });
+//        tv.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(SwipeActivity.this, swipeLayout.isOpen() + "", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 }

@@ -4,7 +4,7 @@
         <attr name="swipeEnabled" format="boolean" />
         <attr name="swipeLeftEnabled" format="boolean" />
         <attr name="swipeRightEnabled" format="boolean" />
-
+        <attr name="clickAutoClose" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="SwipeLayout_Layout">

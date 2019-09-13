@@ -46,12 +46,13 @@ public class SwipeLayout extends ViewGroup {
 
     private static final int TOUCH_STATE_WAIT = 0;
     private static final int TOUCH_STATE_SWIPE = 1;
-    private static final int TOUCH_STATE_SKIP = 2;
+    private static final int TOUCH_STATE_NONE = 2;
 
     private int touchState = TOUCH_STATE_WAIT;
     private float touchX;
     private float touchY;
     private OnStateChangedListener onStateChangedListener;
+    private boolean clickAutoClose;
 
     public SwipeLayout(Context context) {
         this(context, null);
@@ -92,6 +93,7 @@ public class SwipeLayout extends ViewGroup {
             if(a.hasValue(R.styleable.SwipeLayout_swipeRightEnabled)) {
                 rightSwipeEnabled = a.getBoolean(R.styleable.SwipeLayout_swipeRightEnabled, true);
             }
+            clickAutoClose = a.getBoolean(R.styleable.SwipeLayout_clickAutoClose, true);
 
             a.recycle();
         }
@@ -106,13 +108,27 @@ public class SwipeLayout extends ViewGroup {
     }
 
     public void close() {
-        animateReset();
+        animateClose();
+    }
+
+    /**
+     * reset swipe-layout state to initial position
+     */
+    public void reset() {
+        if(centerView == null || getOffset() == 0) {
+            return;
+        }
+
+        finishAnimator();
+        viewDragHelper.abort();
+
+        offsetChildren(null, -centerView.getLeft());
     }
 
     /**
      * reset swipe-layout state to initial position with animation (200ms)
      */
-    public void animateReset() {
+    public void animateClose() {
         if(centerView != null || getOffset() != 0) {
             if(centerView == null || getOffset() == 0) {
                 return;
@@ -351,8 +367,21 @@ public class SwipeLayout extends ViewGroup {
         return rightSwipeEnabled;
     }
 
+    public void setSwipeEnabled(boolean enabled) {
+        leftSwipeEnabled = enabled;
+        rightSwipeEnabled = enabled;
+    }
+
+    public void setLeftSwipeEnabled(boolean enabled) {
+        leftSwipeEnabled = enabled;
+    }
+
+    public void setRightSwipeEnabled(boolean enabled) {
+        rightSwipeEnabled = enabled;
+    }
+
     private boolean internalOnInterceptTouchEvent(MotionEvent event) {
-        if(event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+        if(event.getActionMasked() == MotionEvent.ACTION_MOVE) {
             onTouchBegin(event);
         }
         return viewDragHelper.shouldInterceptTouchEvent(event);
@@ -374,9 +403,8 @@ public class SwipeLayout extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        boolean defaultResult = super.onTouchEvent(event);
         if(!isSwipeEnabled()) {
-            return defaultResult;
+            return super.onTouchEvent(event);
         }
 
         switch(event.getActionMasked()) {
@@ -394,11 +422,11 @@ public class SwipeLayout extends ViewGroup {
                     if(((isLeftToRight && !leftSwipeEnabled) || (!isLeftToRight && !rightSwipeEnabled))
                             && getOffset() == 0) {
 
-                        return defaultResult;
+                        return super.onTouchEvent(event);
                     }
 
                     if(dx >= touchSlop || dy >= touchSlop) {
-                        touchState = dy == 0 || dx / dy > 1f ? TOUCH_STATE_SWIPE : TOUCH_STATE_SKIP;
+                        touchState = dy == 0 || dx / dy > 1f ? TOUCH_STATE_SWIPE : TOUCH_STATE_NONE;
                         if(touchState == TOUCH_STATE_SWIPE) {
                             requestDisallowInterceptTouchEvent(true);
 
@@ -409,10 +437,20 @@ public class SwipeLayout extends ViewGroup {
                 break;
 
             case MotionEvent.ACTION_CANCEL:
+                break;
             case MotionEvent.ACTION_UP:
                 if(touchState == TOUCH_STATE_SWIPE) {
                     unHackParents();
                     requestDisallowInterceptTouchEvent(false);
+                } else {
+                    if(event.getX() == touchX && event.getY() == touchY && getOffset() == 0) {
+                        //点击SwipeLayout自动关闭，还有问题
+                        if(clickAutoClose && isOpen()) {
+                            animateClose();
+                        }
+
+                        performClick();
+                    }
                 }
                 touchState = TOUCH_STATE_WAIT;
                 break;
@@ -422,9 +460,10 @@ public class SwipeLayout extends ViewGroup {
 
         if(event.getActionMasked() != MotionEvent.ACTION_MOVE || touchState == TOUCH_STATE_SWIPE) {
             viewDragHelper.processTouchEvent(event);
+            return true;
+        } else {
+            return super.onTouchEvent(event);
         }
-
-        return true;
     }
 
     /**
